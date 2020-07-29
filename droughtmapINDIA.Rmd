@@ -42,11 +42,11 @@ library(rgeos)
 #setting working directory
 ```{r}
 getwd()
-setwd("C:/Users/moumi/Desktop/maps")
+setwd("~/maps")
 ```
 #importing shape file - district level
 ```{r}
-states_shape = readShapeSpatial('C:/Users/moumi/Desktop/New folder (3)/IND_adm2.shp')
+states_shape = readShapeSpatial('~/IND_adm2.shp')
 ```
 
 
@@ -71,7 +71,7 @@ shp.f <- fortify(states_shape, region = "NAME_2")
 ```
 #import drought data
 ```{r}
-rainfalllongtermdrought <-read_excel("C:/Users/moumi/Desktop/ihdsdata/rainfalllongtermdrought.xlsx")
+rainfalllongtermdrought <-read_excel("~/rainfalllongtermdrought.xlsx")
 ```
 
 #rename to "DISTRICT"
