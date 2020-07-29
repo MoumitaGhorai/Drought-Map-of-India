@@ -1,3 +1,2 @@
-# Map
+# Drought map of India (year 2004) using R
 
-this is from
