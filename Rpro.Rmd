@@ -1,33 +1,97 @@
 ---
-title: "Map"
+title: "Creating maps in R"
 author: "Moumita Ghorai"
 date: "7/27/2020"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+Install the packages needed to plot maps.
 
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
+```{r}
 install.packages("choroplethr")
 install.packages("choroplethrMaps")
 library(choroplethr)
 library(choroplethrMaps)
 ```
 
-## Including Plots
 
-You can also embed plots, for example:
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r}
+install.packages("ggmap")
+library(ggmap)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+```{r}
+install.packages("maps")
+
+```
+#loading package 
+```{r}
+library(ggplot2)
+library(RColorBrewer)
+library(ggmap)
+library(maps)
+library(rgdal)
+library(scales)
+library(maptools)
+library(gridExtra)
+library(rgeos)
+```
+
+#setting working directory
+```{r}
+getwd()
+setwd("C:/Users/moumi/Desktop/maps")
+```
+#importing shape file - district level
+```{r}
+states_shape = readShapeSpatial('C:/Users/moumi/Desktop/New folder (3)/IND_adm2.shp')
+```
+
+
+```{r}
+class(states_shape)
+names(states_shape)
+print(states_shape$ID_1)
+print(states_shape$NAME_1)
+plot(states_shape, main = "Administrative Map of India")
+```
+
+
+```{r}
+names(states_shape)
+print(states_shape$NAME_2)
+```
+
+#Fortify data file.
+```{r}
+shp.f <- fortify(states_shape, region = "NAME_2")
+
+```
+#import drought data
+```{r}
+rainfalllongtermdrought <-read_excel("C:/Users/moumi/Desktop/ihdsdata/rainfalllongtermdrought.xlsx")
+```
+
+#rename to "DISTRICT"
+```{r}
+names(shp.f)[names(shp.f) == "id"] <- "DISTRICT"
+
+```
+
+# Merging it with the rainfall data I got.
+```{r}
+merge.shp.coef<-merge(shp.f,drought2004, by="DISTRICT", all.x=TRUE)
+final.plot<-merge.shp.coef[order(merge.shp.coef$order), ]
+```
+
+```{r}
+ggplot() +
+  geom_polygon(data = final.plot,
+           	aes(x = long, y = lat, group = group, fill = final.plot$drought04),
+      	     color = "black", ) +
+  coord_map()
+
+```
+
